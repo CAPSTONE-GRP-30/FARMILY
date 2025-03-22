@@ -9,6 +9,7 @@ import { UserProvider, useUser } from './context/UserContext';
 import { UserDiscoveryProvider } from './context/UserDiscoveryContext';
 import DiscoverScreen from './screens/DiscoverScreen';
 import ProtectedRoute from './ProtectedRoute';
+import FarmilyCommunityHub from './screens/FarmilyCommunityHub';
 
 // Component that handles conditional redirection after splash
 const SplashHandler = () => {
@@ -40,6 +41,7 @@ const ProtectedRoutes = () => {
         <Route path="/screens/FarmilyApp" element={<FarmilyApp />} />
         <Route path="/chat" element={<ChatScreen />} />
         <Route path="/discover" element={<DiscoverScreen />} />
+        <Route path="/hub" element={<FarmilyCommunityHub />} />
       </Routes>
     </UserDiscoveryProvider>
   );

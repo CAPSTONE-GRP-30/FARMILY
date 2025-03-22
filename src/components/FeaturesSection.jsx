@@ -8,6 +8,11 @@ const FeaturesSection = () => {
   const handleNavigateToChat = () => {
     navigate('/chat');
   };
+  
+  const handleNavigateToHub = () => {
+    navigate('/hub');
+    console.log('Navigating to hub'); // Add debugging to verify click handler is triggered
+  };
 
   return (
     <div className="grid grid-cols-3 gap-6 bg-gray-900 text-white p-8">
@@ -39,6 +44,7 @@ const FeaturesSection = () => {
             icon={<Users className="h-5 w-5 group-hover:text-green-500" />}
             title="Community Hub"
             description="Join discussions and share best practices."
+            onClick={handleNavigateToHub}
           />
         </div>
       </div>
