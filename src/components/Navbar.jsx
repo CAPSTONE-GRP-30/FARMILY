@@ -1,15 +1,18 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Search, User, X } from 'lucide-react';
 import { useUser } from '../context/UserContext'; 
+import { Link } from 'react-router-dom';
 
 const Navbar = () => {
   // State for managing dropdowns and search
   const [userDropdownOpen, setUserDropdownOpen] = useState(false);
+  const [servicesDropdownOpen, setServicesDropdownOpen] = useState(false);
   const [searchExpanded, setSearchExpanded] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   
   // Refs for handling clicks outside dropdowns
   const userDropdownRef = useRef(null);
+  const servicesDropdownRef = useRef(null);
   const searchRef = useRef(null);
   
   // Use the custom hook to access user context
@@ -26,6 +29,9 @@ const Navbar = () => {
       if (userDropdownRef.current && !userDropdownRef.current.contains(event.target)) {
         setUserDropdownOpen(false);
       }
+      if (servicesDropdownRef.current && !servicesDropdownRef.current.contains(event.target)) {
+        setServicesDropdownOpen(false);
+      }
       if (searchRef.current && !searchRef.current.contains(event.target) && searchExpanded) {
         setSearchExpanded(false);
       }
@@ -40,6 +46,11 @@ const Navbar = () => {
   // Toggle user dropdown
   const toggleUserDropdown = () => {
     setUserDropdownOpen(!userDropdownOpen);
+  };
+
+  // Toggle services dropdown
+  const toggleServicesDropdown = () => {
+    setServicesDropdownOpen(!servicesDropdownOpen);
   };
 
   // Toggle search bar expansion
@@ -72,11 +83,36 @@ const Navbar = () => {
         </div>
         
         <div className="space-x-6">
-          <a href="/" className="text-green-500 hover:text-green-400">Home</a>
-          <div className="relative inline-block">
-            <a href="/services" className="text-white hover:text-green-400">Services <span className="text-xs">▼</span></a>
+          <Link to="/screens/FarmilyApp" className="text-green-500 hover:text-green-400">Home</Link>
+          
+          {/* Services dropdown */}
+          <div ref={servicesDropdownRef} className="relative inline-block">
+            <button 
+              onClick={toggleServicesDropdown}
+              className="text-white hover:text-green-400 focus:outline-none"
+            >
+              Services <span className="text-xs">▼</span>
+            </button>
+            
+            {servicesDropdownOpen && (
+              <div className="absolute left-0 mt-2 w-40 bg-gray-800 rounded-md shadow-lg z-10 py-2">
+                <Link to="/market" className="block px-4 py-2 text-sm text-gray-300 hover:bg-gray-700 hover:text-white">
+                  Market
+                </Link>
+                <Link to="/chat" className="block px-4 py-2 text-sm text-gray-300 hover:bg-gray-700 hover:text-white">
+                  Chat
+                </Link>
+                <Link to="/video-call" className="block px-4 py-2 text-sm text-gray-300 hover:bg-gray-700 hover:text-white">
+                  Call
+                </Link>
+                <Link to="/crop-tracking" className="block px-4 py-2 text-sm text-gray-300 hover:bg-gray-700 hover:text-white">
+                  Crop Tracking
+                </Link>
+              </div>
+            )}
           </div>
-          <a href="/about" className="text-white hover:text-green-400">About Us</a>
+          
+          <Link to="/about" className="text-white hover:text-green-400">About Us</Link>
         </div>
       </div>
       
@@ -131,24 +167,24 @@ const Navbar = () => {
                     <p className="text-xs text-gray-400 mt-1">{email}</p>
                     <p className="text-xs text-gray-400 mt-1">@{username}</p>
                   </div>
-                  <a href="/profile" className="block px-4 py-2 text-sm text-gray-300 hover:bg-gray-700 hover:text-white">
+                  <Link to="/profile" className="block px-4 py-2 text-sm text-gray-300 hover:bg-gray-700 hover:text-white">
                     Your Profile
-                  </a>
-                  <a href="/settings" className="block px-4 py-2 text-sm text-gray-300 hover:bg-gray-700 hover:text-white">
+                  </Link>
+                  <Link to="/settings" className="block px-4 py-2 text-sm text-gray-300 hover:bg-gray-700 hover:text-white">
                     Settings
-                  </a>
-                  <a href="/logout" className="block px-4 py-2 text-sm text-red-400 hover:bg-gray-700 hover:text-red-300">
+                  </Link>
+                  <Link to="/logout" className="block px-4 py-2 text-sm text-red-400 hover:bg-gray-700 hover:text-red-300">
                     Sign out
-                  </a>
+                  </Link>
                 </div>
               )}
             </>
           ) : (
             // Show login button when not authenticated
-            <a href="/login" className="flex items-center bg-green-500 rounded-full p-1 px-3 hover:bg-green-600 transition-colors">
+            <Link to="/login" className="flex items-center bg-green-500 rounded-full p-1 px-3 hover:bg-green-600 transition-colors">
               <User className="h-5 w-5 text-white mr-2" />
               <span className="text-white">Login</span>
-            </a>
+            </Link>
           )}
         </div>
       </div>
