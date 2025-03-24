@@ -10,7 +10,10 @@ import { UserDiscoveryProvider } from './context/UserDiscoveryContext';
 import DiscoverScreen from './screens/DiscoverScreen';
 import ProtectedRoute from './ProtectedRoute';
 import FarmilyCommunityHub from './screens/FarmilyCommunityHub';
-import VideoCalling from './screens/VideoCalling'; // Import the VideoCalling component
+import VideoCalling from './screens/VideoCalling'; 
+import CropTrackScreen from './screens/CropTrackScreen';
+import TaskManagementPage from './screens/TaskManagementPage';
+
 
 // Component that handles conditional redirection after splash
 const SplashHandler = () => {
@@ -43,7 +46,12 @@ const ProtectedRoutes = () => {
         <Route path="/chat" element={<ChatScreen />} />
         <Route path="/discover" element={<DiscoverScreen />} />
         <Route path="/hub" element={<FarmilyCommunityHub />} />
-        <Route path="/video-call" element={<VideoCalling />} /> {/* Add the video calling route */}
+        <Route path="/video-call" element={<VideoCalling />} /> 
+        <Route path="/crop-tracking" element={<CropTrackScreen />} />
+        <Route path="/task" element={<TaskManagementPage />} />
+
+
+
       </Routes>
     </UserDiscoveryProvider>
   );

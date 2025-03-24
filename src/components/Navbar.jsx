@@ -1,9 +1,13 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Search, User, X } from 'lucide-react';
 import { useUser } from '../context/UserContext'; 
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 
 const Navbar = () => {
+  // Get current location to determine active link
+  const location = useLocation();
+  const currentPath = location.pathname;
+  
   // State for managing dropdowns and search
   const [userDropdownOpen, setUserDropdownOpen] = useState(false);
   const [servicesDropdownOpen, setServicesDropdownOpen] = useState(false);
@@ -22,6 +26,22 @@ const Navbar = () => {
   const displayName = userProfile?.displayName || userProfile?.name || "Guest";
   const email = userProfile?.email || "No email available";
   const username = userProfile?.username || "No username";
+
+  // Helper function to determine if link is active
+  const isActive = (path) => {
+    if (path === '/screens/FarmilyApp' && currentPath === '/screens/FarmilyApp') {
+      return true;
+    }
+    // For services, check if current path includes any of the service paths
+    if (path === 'services') {
+      const servicePaths = ['/market', '/chat', '/video-call', '/crop-tracking', '/task'];
+      return servicePaths.some(service => currentPath === service);
+    }
+    if (path === '/about' && currentPath === '/about') {
+      return true;
+    }
+    return false;
+  };
 
   // Handle clicks outside dropdowns to close them
   useEffect(() => {
@@ -83,36 +103,64 @@ const Navbar = () => {
         </div>
         
         <div className="space-x-6">
-          <Link to="/screens/FarmilyApp" className="text-green-500 hover:text-green-400">Home</Link>
+          <Link 
+            to="/screens/FarmilyApp" 
+            className={`${isActive('/screens/FarmilyApp') ? 'text-green-500' : 'text-white'} hover:text-green-400`}
+          >
+            Home
+          </Link>
           
           {/* Services dropdown */}
           <div ref={servicesDropdownRef} className="relative inline-block">
             <button 
               onClick={toggleServicesDropdown}
-              className="text-white hover:text-green-400 focus:outline-none"
+              className={`${isActive('services') ? 'text-green-500' : 'text-white'} hover:text-green-400 focus:outline-none`}
             >
               Services <span className="text-xs">▼</span>
             </button>
             
             {servicesDropdownOpen && (
               <div className="absolute left-0 mt-2 w-40 bg-gray-800 rounded-md shadow-lg z-10 py-2">
-                <Link to="/market" className="block px-4 py-2 text-sm text-gray-300 hover:bg-gray-700 hover:text-white">
+                <Link 
+                  to="/market" 
+                  className={`block px-4 py-2 text-sm ${currentPath === '/market' ? 'text-green-500' : 'text-gray-300'} hover:bg-gray-700 hover:text-white`}
+                >
                   Market
                 </Link>
-                <Link to="/chat" className="block px-4 py-2 text-sm text-gray-300 hover:bg-gray-700 hover:text-white">
+                <Link 
+                  to="/chat" 
+                  className={`block px-4 py-2 text-sm ${currentPath === '/chat' ? 'text-green-500' : 'text-gray-300'} hover:bg-gray-700 hover:text-white`}
+                >
                   Chat
                 </Link>
-                <Link to="/video-call" className="block px-4 py-2 text-sm text-gray-300 hover:bg-gray-700 hover:text-white">
+                <Link 
+                  to="/video-call" 
+                  className={`block px-4 py-2 text-sm ${currentPath === '/video-call' ? 'text-green-500' : 'text-gray-300'} hover:bg-gray-700 hover:text-white`}
+                >
                   Call
                 </Link>
-                <Link to="/crop-tracking" className="block px-4 py-2 text-sm text-gray-300 hover:bg-gray-700 hover:text-white">
+                <Link 
+                  to="/crop-tracking" 
+                  className={`block px-4 py-2 text-sm ${currentPath === '/crop-tracking' ? 'text-green-500' : 'text-gray-300'} hover:bg-gray-700 hover:text-white`}
+                >
                   Crop Tracking
+                </Link>
+                <Link 
+                  to="/task" 
+                  className={`block px-4 py-2 text-sm ${currentPath === '/task' ? 'text-green-500' : 'text-gray-300'} hover:bg-gray-700 hover:text-white`}
+                >
+                  Task Management
                 </Link>
               </div>
             )}
           </div>
           
-          <Link to="/about" className="text-white hover:text-green-400">About Us</Link>
+          <Link 
+            to="/about" 
+            className={`${isActive('/about') ? 'text-green-500' : 'text-white'} hover:text-green-400`}
+          >
+            About Us
+          </Link>
         </div>
       </div>
       
@@ -167,10 +215,16 @@ const Navbar = () => {
                     <p className="text-xs text-gray-400 mt-1">{email}</p>
                     <p className="text-xs text-gray-400 mt-1">@{username}</p>
                   </div>
-                  <Link to="/profile" className="block px-4 py-2 text-sm text-gray-300 hover:bg-gray-700 hover:text-white">
+                  <Link 
+                    to="/profile" 
+                    className={`block px-4 py-2 text-sm ${currentPath === '/profile' ? 'text-green-500' : 'text-gray-300'} hover:bg-gray-700 hover:text-white`}
+                  >
                     Your Profile
                   </Link>
-                  <Link to="/settings" className="block px-4 py-2 text-sm text-gray-300 hover:bg-gray-700 hover:text-white">
+                  <Link 
+                    to="/settings" 
+                    className={`block px-4 py-2 text-sm ${currentPath === '/settings' ? 'text-green-500' : 'text-gray-300'} hover:bg-gray-700 hover:text-white`}
+                  >
                     Settings
                   </Link>
                   <Link to="/logout" className="block px-4 py-2 text-sm text-red-400 hover:bg-gray-700 hover:text-red-300">

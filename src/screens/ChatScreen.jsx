@@ -17,6 +17,8 @@ import {
   Timestamp
 } from 'firebase/firestore';
 import { db } from '../firebaseConfig';
+import Navbar from '../components/Navbar';
+
 
 const ChatScreen = () => {
   const [activeTab, setActiveTab] = useState('chats');
@@ -426,7 +428,12 @@ const ChatScreen = () => {
 
   // Main render
   return (
+
+    
+
     <div className="flex h-screen bg-gray-100">
+       
+
       {/* Sidebar Navigation */}
       <div className="w-72 bg-white border-r flex flex-col shadow-sm">
         {/* App Logo & User Profile */}

@@ -134,10 +134,24 @@ const VideoCallingUI = () => {
   }, [micError, cameraError, calling]);
   
   // Publish tracks to the channel
-  const { isPublished } = usePublish([localMicrophoneTrack, localCameraTrack]);
+  // Ensure we're publishing the tracks when they're available and we've joined the channel
+  const { isPublished } = usePublish(
+    [localMicrophoneTrack, localCameraTrack].filter(Boolean),
+    isJoined
+  );
   
   // Get the list of remote users
   const remoteUsers = useRemoteUsers();
+
+  // Debug remote users to help troubleshoot
+  useEffect(() => {
+    if (remoteUsers.length > 0) {
+      console.log("Remote users:", remoteUsers);
+      remoteUsers.forEach(user => {
+        console.log(`Remote user ${user.uid} has video track:`, user.hasVideo, "has audio track:", user.hasAudio);
+      });
+    }
+  }, [remoteUsers]);
   
   // Reset error when calling state changes
   useEffect(() => {
@@ -149,7 +163,7 @@ const VideoCallingUI = () => {
     if (calling && rtcClient && userName && isJoined) {
       try {
         // Set up metadata for the local user
-        rtcClient.setLocalUserAttributes({
+        rtcClient.setLocalUserAttributes?.({
           name: userName
         }).catch(err => console.error("Failed to set local attributes:", err));
         
@@ -170,6 +184,7 @@ const VideoCallingUI = () => {
         
         // When a new user joins, ask them for their name
         rtcClient.on('user-joined', (user) => {
+          console.log("User joined:", user.uid);
           rtcClient.dispatchEvent({
             type: 'request-name',
             uid: rtcClient.uid,
@@ -412,66 +427,61 @@ const VideoCallingUI = () => {
             
             <div className="p-4">
               <div className="flex flex-wrap gap-4 mb-6">
-                {localCameraTrack && (
-                  <div className="flex-1 min-w-[300px]">
-                    <div className="relative rounded-lg overflow-hidden bg-black">
-                      <LocalUser
-                        audioTrack={localMicrophoneTrack}
-                        cameraOn={cameraOn}
-                        micOn={micOn}
-                        videoTrack={localCameraTrack}
-                        style={{ width: '100%', height: 300 }}
-                      />
-                      <div className="absolute bottom-2 left-2 bg-black/50 text-white px-2 py-1 rounded text-xs">
-                        You ({userName})
-                      </div>
+                {/* Local user video */}
+                <div className="flex-1 min-w-[300px]">
+                  <div className="relative rounded-lg overflow-hidden bg-black">
+                    <LocalUser
+                      audioTrack={localMicrophoneTrack}
+                      cameraOn={cameraOn}
+                      micOn={micOn}
+                      videoTrack={localCameraTrack}
+                      style={{ width: '100%', height: 300 }}
+                    />
+                    <div className="absolute bottom-2 left-2 bg-black/50 text-white px-2 py-1 rounded text-xs">
+                      You ({userName})
                     </div>
                   </div>
-                )}
+                </div>
                 
+                {/* Remote users videos - ensure they're properly rendered */}
                 {remoteUsers.map((user) => (
                   <div key={user.uid} className="flex-1 min-w-[300px]">
                     <div className="relative rounded-lg overflow-hidden bg-black">
-                      <RemoteUser user={user} style={{ width: '100%', height: 300 }}>
-                        <span className="absolute bottom-2 left-2 bg-black/50 text-white px-2 py-1 rounded text-xs">
-                          {participantNames[user.uid] || `Participant ${user.uid}`}
-                        </span>
-                      </RemoteUser>
+                      <RemoteUser 
+                        user={user} 
+                        style={{ width: '100%', height: 300 }}
+                      />
+                      <div className="absolute bottom-2 left-2 bg-black/50 text-white px-2 py-1 rounded text-xs">
+                        {participantNames[user.uid] || `Participant ${user.uid}`}
+                        {user.hasVideo ? '' : ' (Video Off)'}
+                        {user.hasAudio ? '' : ' (Audio Off)'}
+                      </div>
                     </div>
                   </div>
                 ))}
                 
-                {(!localCameraTrack || remoteUsers.length === 0) && (
+                {remoteUsers.length === 0 && (
                   <div className="flex-1 min-w-[300px] flex items-center justify-center bg-gray-100 h-[300px] rounded-lg">
                     <div className="text-center">
-                      {!localCameraTrack ? (
-                        <>
-                          <div className="text-gray-500 mb-2">Camera unavailable</div>
-                          <div className="text-sm text-gray-400">Please check your camera permissions</div>
-                        </>
-                      ) : (
-                        <>
-                          <div className="text-gray-500 mb-2">Waiting for others to join...</div>
-                          <div className="text-sm text-gray-400">Share the Meeting ID with others</div>
-                          <div className="flex items-center justify-center mt-2">
-                            <span className="text-lg font-bold bg-green-50 py-1 px-3 rounded border border-green-100">
-                              {isCreatingMeeting ? generatedMeetingId : meetingId}
-                            </span>
-                            <button 
-                              onClick={() => {
-                                navigator.clipboard.writeText(isCreatingMeeting ? generatedMeetingId : meetingId);
-                                alert("Meeting ID copied to clipboard!");
-                              }}
-                              className="ml-2 p-1 text-green-600 hover:text-green-700"
-                              title="Copy to clipboard"
-                            >
-                              <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3" />
-                              </svg>
-                            </button>
-                          </div>
-                        </>
-                      )}
+                      <div className="text-gray-500 mb-2">Waiting for others to join...</div>
+                      <div className="text-sm text-gray-400">Share the Meeting ID with others</div>
+                      <div className="flex items-center justify-center mt-2">
+                        <span className="text-lg font-bold bg-green-50 py-1 px-3 rounded border border-green-100">
+                          {isCreatingMeeting ? generatedMeetingId : meetingId}
+                        </span>
+                        <button 
+                          onClick={() => {
+                            navigator.clipboard.writeText(isCreatingMeeting ? generatedMeetingId : meetingId);
+                            alert("Meeting ID copied to clipboard!");
+                          }}
+                          className="ml-2 p-1 text-green-600 hover:text-green-700"
+                          title="Copy to clipboard"
+                        >
+                          <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3" />
+                          </svg>
+                        </button>
+                      </div>
                     </div>
                   </div>
                 )}
@@ -487,7 +497,7 @@ const VideoCallingUI = () => {
                     {micOn ? (
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z" />
                     ) : (
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z" stroke-dasharray="2 2" />
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z" />
                     )}
                   </svg>
                 </button>
