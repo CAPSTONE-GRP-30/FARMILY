@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Search, User, X } from 'lucide-react';
+import { Search, User, X, ShoppingCart } from 'lucide-react';
 import { useUser } from '../context/UserContext'; 
 import { Link, useLocation } from 'react-router-dom';
 
@@ -89,9 +89,6 @@ const Navbar = () => {
     e.preventDefault();
     // Implement search functionality here
     console.log('Searching for:', searchQuery);
-    // Optional: collapse search after submission
-    // setSearchExpanded(false);
-    // setSearchQuery('');
   };
 
   return (
@@ -125,7 +122,13 @@ const Navbar = () => {
                   to="/market" 
                   className={`block px-4 py-2 text-sm ${currentPath === '/market' ? 'text-green-500' : 'text-gray-300'} hover:bg-gray-700 hover:text-white`}
                 >
-                  Market
+                  Int Market
+                </Link>
+                <Link 
+                  to="/farm" 
+                  className={`block px-4 py-2 text-sm ${currentPath === '/market' ? 'text-green-500' : 'text-gray-300'} hover:bg-gray-700 hover:text-white`}
+                >
+                  Local Market
                 </Link>
                 <Link 
                   to="/chat" 
@@ -187,6 +190,14 @@ const Navbar = () => {
             </button>
           )}
         </div>
+        
+        {/* Cart Link */}
+        <Link 
+          to="/cart" 
+          className={`flex items-center ${currentPath === '/cart' ? 'text-green-500' : 'text-white'} hover:text-green-400 mr-2`}
+        >
+          <ShoppingCart className="h-5 w-5" />
+        </Link>
         
         {/* User Profile / Login Button */}
         <div ref={userDropdownRef} className="relative">

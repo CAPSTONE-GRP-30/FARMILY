@@ -1,14 +1,22 @@
 import React, { useState } from 'react';
 import CropGrowthTracker from '../components/CropGrowthTracker';
 import WeatherForecast from '../components/WeatherForecast';
+import CropDetectionComponent from '../components/CropDetectionComponent';
 
 const CropTrackScreen = () => {
   const [activeTab, setActiveTab] = useState('crop');
   const [currentFarmId, setCurrentFarmId] = useState(null);
+  const [detectionResult, setDetectionResult] = useState(null);
 
   // Handle farm changes to keep consistent between tabs
   const handleFarmChange = (farmId) => {
     setCurrentFarmId(farmId);
+  };
+
+  // Handle detection results from the CropDetectionComponent
+  const handleDetectionComplete = (result) => {
+    setDetectionResult(result);
+    console.log(result);
   };
 
   return (
@@ -67,6 +75,23 @@ const CropTrackScreen = () => {
             </div>
             {activeTab === 'weather' && <div className="absolute bottom-0 left-0 w-full h-0.5 bg-green-600"></div>}
           </button>
+
+          <button
+            className={`py-3 px-6 font-medium transition-colors duration-200 relative ${
+              activeTab === 'detection'
+                ? 'text-green-700 font-medium'
+                : 'text-gray-500 hover:text-green-600'
+            }`}
+            onClick={() => setActiveTab('detection')}
+          >
+            <div className="flex items-center space-x-2">
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+              </svg>
+              <span>Disease Detection</span>
+            </div>
+            {activeTab === 'detection' && <div className="absolute bottom-0 left-0 w-full h-0.5 bg-green-600"></div>}
+          </button>
         </div>
 
         {/* Tab Content */}
@@ -78,10 +103,40 @@ const CropTrackScreen = () => {
           {activeTab === 'weather' && (
             <WeatherForecast farmId={currentFarmId} />
           )}
+
+          {activeTab === 'detection' && (
+            <div className="p-4">
+              <CropDetectionComponent onDetectionComplete={handleDetectionComplete} />
+              
+              {/* Optional: Display additional information based on detection results */}
+              {detectionResult && (
+                <div className="mt-8 p-4 bg-gray-50 rounded-lg border border-gray-200">
+                  <h3 className="text-lg font-medium text-gray-800 mb-2">Recent Detection Results</h3>
+                  <div className="flex items-center justify-between">
+                    <span className="text-sm text-gray-600">
+                      {new Date().toLocaleString()}
+                    </span>
+                    <span className={`px-3 py-1 rounded-full text-sm font-medium ${
+                      detectionResult.prediction === 'healthy' 
+                        ? 'bg-green-100 text-green-800' 
+                        : 'bg-red-100 text-red-800'
+                    }`}>
+                      {detectionResult.prediction.replace(/_/g, ' ')}
+                    </span>
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
         </div>
       </main>
 
-      
+      {/* Optional Footer */}
+      <footer className="bg-white border-t border-gray-200 mt-12">
+        <div className="max-w-6xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
+          <p className="text-sm text-gray-500 text-center">© 2025 Farmily. All rights reserved.</p>
+        </div>
+      </footer>
     </div>
   );
 };

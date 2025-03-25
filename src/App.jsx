@@ -1,19 +1,27 @@
 import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+
 import FarmilyApp from './screens/FarmilyApp';
 import Splash from './screens/Splash';
 import Login from './screens/Login';
 import Signup from './screens/Signup';
 import ChatScreen from './screens/ChatScreen';
-import { UserProvider, useUser } from './context/UserContext';
-import { UserDiscoveryProvider } from './context/UserDiscoveryContext';
 import DiscoverScreen from './screens/DiscoverScreen';
-import ProtectedRoute from './ProtectedRoute';
 import FarmilyCommunityHub from './screens/FarmilyCommunityHub';
 import VideoCalling from './screens/VideoCalling'; 
 import CropTrackScreen from './screens/CropTrackScreen';
 import TaskManagementPage from './screens/TaskManagementPage';
+import Marketplace from './screens/Marketplace';
+import CartScreen from './screens/CartScreen';
+import FarmersMarketplace from './screens/FarmersMarketplace';
 
+// Context Providers
+import { UserProvider, useUser } from './context/UserContext';
+import { CartProvider } from './context/CartContext';
+import { UserDiscoveryProvider } from './context/UserDiscoveryContext';
+
+// Protected Route Component
+import ProtectedRoute from './ProtectedRoute';
 
 // Component that handles conditional redirection after splash
 const SplashHandler = () => {
@@ -41,18 +49,20 @@ const SplashHandler = () => {
 const ProtectedRoutes = () => {
   return (
     <UserDiscoveryProvider>
-      <Routes>
-        <Route path="/screens/FarmilyApp" element={<FarmilyApp />} />
-        <Route path="/chat" element={<ChatScreen />} />
-        <Route path="/discover" element={<DiscoverScreen />} />
-        <Route path="/hub" element={<FarmilyCommunityHub />} />
-        <Route path="/video-call" element={<VideoCalling />} /> 
-        <Route path="/crop-tracking" element={<CropTrackScreen />} />
-        <Route path="/task" element={<TaskManagementPage />} />
-
-
-
-      </Routes>
+      <CartProvider>
+        <Routes>
+          <Route path="/screens/FarmilyApp" element={<FarmilyApp />} />
+          <Route path="/chat" element={<ChatScreen />} />
+          <Route path="/discover" element={<DiscoverScreen />} />
+          <Route path="/hub" element={<FarmilyCommunityHub />} />
+          <Route path="/video-call" element={<VideoCalling />} /> 
+          <Route path="/crop-tracking" element={<CropTrackScreen />} />
+          <Route path="/task" element={<TaskManagementPage />} />
+          <Route path="/market" element={<Marketplace />} />
+          <Route path="/cart" element={<CartScreen/>} />
+          <Route path="/farm" element={<FarmersMarketplace/>} />
+        </Routes>
+      </CartProvider>
     </UserDiscoveryProvider>
   );
 };
