@@ -149,10 +149,22 @@ const Navbar = () => {
                   Crop Tracking
                 </Link>
                 <Link 
+                  to="/product" 
+                  className={`block px-4 py-2 text-sm ${currentPath === '/crop-tracking' ? 'text-green-500' : 'text-gray-300'} hover:bg-gray-700 hover:text-white`}
+                >
+                  Product Insight
+                </Link>
+                <Link 
                   to="/task" 
                   className={`block px-4 py-2 text-sm ${currentPath === '/task' ? 'text-green-500' : 'text-gray-300'} hover:bg-gray-700 hover:text-white`}
                 >
                   Task Management
+                </Link>
+                <Link 
+                  to="/hub" 
+                  className={`block px-4 py-2 text-sm ${currentPath === '/task' ? 'text-green-500' : 'text-gray-300'} hover:bg-gray-700 hover:text-white`}
+                >
+                  Community Hub
                 </Link>
               </div>
             )}
@@ -238,7 +250,7 @@ const Navbar = () => {
                   >
                     Settings
                   </Link>
-                  <Link to="/logout" className="block px-4 py-2 text-sm text-red-400 hover:bg-gray-700 hover:text-red-300">
+                  <Link to="/login" className="block px-4 py-2 text-sm text-red-400 hover:bg-gray-700 hover:text-red-300">
                     Sign out
                   </Link>
                 </div>

@@ -14,6 +14,7 @@ import TaskManagementPage from './screens/TaskManagementPage';
 import Marketplace from './screens/Marketplace';
 import CartScreen from './screens/CartScreen';
 import FarmersMarketplace from './screens/FarmersMarketplace';
+import ProductInsightsDashboard from './screens/ProductInsightsDashboard';
 
 // Context Providers
 import { UserProvider, useUser } from './context/UserContext';
@@ -61,6 +62,7 @@ const ProtectedRoutes = () => {
           <Route path="/market" element={<Marketplace />} />
           <Route path="/cart" element={<CartScreen/>} />
           <Route path="/farm" element={<FarmersMarketplace/>} />
+          <Route path="/product" element={<ProductInsightsDashboard/>} />
         </Routes>
       </CartProvider>
     </UserDiscoveryProvider>

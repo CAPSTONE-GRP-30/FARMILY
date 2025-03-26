@@ -13,7 +13,7 @@ import { db } from '../firebaseConfig';
 
 const Login = () => {
   const navigate = useNavigate();
-  const [activeTab, setActiveTab] = useState('email'); // 'email' or 'phone'
+  const [activeTab, setActiveTab] = useState('email'); 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [phoneNumber, setPhoneNumber] = useState('');

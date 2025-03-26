@@ -11,7 +11,9 @@ import AgoraRTC, {
   useRTCClient,
 } from "agora-rtc-react";
 import { Link, useNavigate } from "react-router-dom";
-import { useUser } from "../context/UserContext"; // Import the user context
+import { useUser } from "../context/UserContext"; 
+import Navbar from '../components/Navbar';
+
 
 // Constants - hidden from users
 const AGORA_APP_ID = "576dbd6a01cf495597d22f2fb0872433";
@@ -302,11 +304,11 @@ const VideoCallingUI = () => {
   
   return (
     <div className="min-h-screen bg-gradient-to-br from-white to-green-50 font-sans">
+      <Navbar />
       <div className="max-w-6xl mx-auto p-4">
         <div className="flex justify-between items-center mb-6">
           <div className="flex items-center space-x-2">
-            <img src="/tre.png" alt="FARMILY Logo" className="h-10 w-auto" />
-            <h1 className="text-2xl font-bold text-green-600">FARMILY </h1>
+            
           </div>
           
           {!calling && (

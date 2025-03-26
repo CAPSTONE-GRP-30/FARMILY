@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useUser } from '../context/UserContext';
 import { useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { 
   collection, 
   query, 
@@ -438,10 +439,11 @@ const ChatScreen = () => {
       <div className="w-72 bg-white border-r flex flex-col shadow-sm">
         {/* App Logo & User Profile */}
         <div className="p-4 border-b bg-gradient-to-r from-green-600 to-teal-500 text-white">
-          <div className="flex items-center mb-4">
-            <img src="/tre.png" alt="Tre Logo" className="h-10 mr-2" />
-            <div className="text-xl font-bold">Farmily</div>
-          </div>
+  <Link to="/screens/FarmilyApp" className="flex items-center mb-4 cursor-pointer hover:opacity-80 transition-opacity">
+    <img src="/tre.png" alt="Tre Logo" className="h-10 mr-2" />
+    <div className="text-xl font-bold">Farmily</div>
+  </Link>
+  
           
           <div className="flex items-center">
             <div className="w-12 h-12 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center text-white font-bold border-2 border-white/30">

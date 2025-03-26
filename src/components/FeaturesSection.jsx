@@ -11,9 +11,15 @@ const FeaturesSection = () => {
   
   const handleNavigateToHub = () => {
     navigate('/hub');
-    console.log('Navigating to hub'); // Add debugging to verify click handler is triggered
   };
 
+  const handleNavigateToMarket = () => {
+    navigate('/market');
+  };
+
+  const handleNavigateToTask = () => {
+    navigate('/task');
+  };
   return (
     <div className="grid grid-cols-3 gap-6 bg-gray-900 text-white p-8">
       {/* Features Column */}
@@ -32,12 +38,14 @@ const FeaturesSection = () => {
             icon={<ShoppingCart className="h-5 w-5 group-hover:text-green-500" />}
             title="Marketplace"
             description="Buy and sell farm essentials effortlessly."
+            onClick={handleNavigateToMarket}
           />
           
           <FeatureItem 
             icon={<CheckSquare className="h-5 w-5 group-hover:text-green-500" />}
             title="Task Management"
             description="Stay organized and on track with tasks."
+            onClick={handleNavigateToTask}
           />
           
           <FeatureItem 
@@ -58,6 +66,7 @@ const FeaturesSection = () => {
             icon={<File className="h-5 w-5 group-hover:text-green-500" />}
             title="Farming Tips"
             description="Discover expert advice for better yields."
+            
           />
           
           <FeatureItem 
